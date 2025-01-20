@@ -1,13 +1,19 @@
 package commands
 
 import (
-	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/eiannone/keyboard"
 	"github.com/spf13/cobra"
 )
+
+type Location struct {
+	City      string  `json:"city"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+}
 
 func getFavourites() *cobra.Command {
 	return &cobra.Command{
@@ -32,10 +38,16 @@ func displayFavourites() error {
 		return fmt.Errorf("no favorites found")
 	}
 
+	// Format locations for display
+	displayStrings := make([]string, len(favorites))
+	for i, loc := range favorites {
+		displayStrings[i] = fmt.Sprintf("%s: %.4f° N, %.4f° E", loc.City, loc.Latitude, loc.Longitude)
+	}
+
 	// Display first 5 cities
-	currentIndex := min(5, len(favorites))
+	currentIndex := min(5, len(displayStrings))
 	for i := 0; i < currentIndex; i++ {
-		fmt.Println(favorites[i])
+		fmt.Println(displayStrings[i])
 	}
 
 	// Setup keyboard events
@@ -57,31 +69,28 @@ func displayFavourites() error {
 			return nil
 		}
 
-		if key == keyboard.KeyArrowDown && currentIndex < len(favorites) {
-			fmt.Println(favorites[currentIndex])
+		if key == keyboard.KeyArrowDown && currentIndex < len(displayStrings) {
+			fmt.Println(displayStrings[currentIndex])
 			currentIndex++
 		}
 	}
 }
 
-func readFavorites() ([]string, error) {
-	file, err := os.Open("favorites.txt")
+func readFavorites() ([]Location, error) {
+	data, err := os.ReadFile("favourites.json")
 	if err != nil {
-		return nil, fmt.Errorf("failed to open favorites file: %v", err)
-	}
-	defer file.Close()
-
-	var favorites []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		favorites = append(favorites, scanner.Text())
+		if os.IsNotExist(err) {
+			return []Location{}, nil
+		}
+		return nil, fmt.Errorf("failed to open favourites file: %v", err)
 	}
 
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("error reading file: %v", err)
+	var locations []Location
+	if err := json.Unmarshal(data, &locations); err != nil {
+		return nil, fmt.Errorf("error parsing favourites: %v", err)
 	}
 
-	return favorites, nil
+	return locations, nil
 }
 
 func min(a, b int) int {

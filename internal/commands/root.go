@@ -14,7 +14,7 @@ func NewRootCommand() *cobra.Command {
 	// Add subcommands
 	rootCmd.AddCommand(getWeather())
 	rootCmd.AddCommand(getFavourites())
-	rootCmd.AddCommand(setFavourites())
+	rootCmd.AddCommand(setFavourite())
 
 	return rootCmd
 }
