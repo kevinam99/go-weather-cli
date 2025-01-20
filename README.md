@@ -1,5 +1,6 @@
 # Go Weather CLI
 
+## About
 I built this CLI to learn Go. I wanted to do something that would be useful, fun and simple.
 
 It uses the OpenWeatherMap API to get weather information.
@@ -11,8 +12,7 @@ I've also added a few other features:
 - Getting the weather for a favourite city
 
 
-
-# Usage
+## Usage
 
 To fetch the weather for the given coordinates, run in the format `get-weather -l <latitude> -n <longitude>`:
 ```bash
