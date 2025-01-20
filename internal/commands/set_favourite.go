@@ -19,7 +19,7 @@ func setFavourite() *cobra.Command {
 			fmt.Sscanf(args[1], "%f", &lat)
 			fmt.Sscanf(args[2], "%f", &lon)
 
-			if err := saveFavourite(city, lat, lon); err != nil {
+			if err := saveFavouriteCity(city, lat, lon); err != nil {
 				fmt.Printf("Error: %v\n", err)
 				return
 			}
@@ -28,18 +28,10 @@ func setFavourite() *cobra.Command {
 	}
 }
 
-func saveFavourite(city string, lat, lon float64) error {
-	locations := []Location{}
-
-	// Read existing favorites if file exists
-	data, err := os.ReadFile("favourites.json")
-	if err == nil {
-		if err := json.Unmarshal(data, &locations); err != nil {
-			return fmt.Errorf("error parsing existing favourites: %v", err)
-		}
-	} else if !os.IsNotExist(err) {
-		// Return error if it's not a "file not found" error
-		return fmt.Errorf("error reading favourites file: %v", err)
+func saveFavouriteCity(city string, lat, lon float64) error {
+	locations, err := readFavorites()
+	if err != nil {
+		return fmt.Errorf("error reading favourites: %v", err)
 	}
 
 	// Check if city already exists
@@ -57,7 +49,7 @@ func saveFavourite(city string, lat, lon float64) error {
 	})
 
 	// Save back to file
-	data, err = json.MarshalIndent(locations, "", "    ")
+	data, err := json.MarshalIndent(locations, "", "    ")
 	if err != nil {
 		return fmt.Errorf("error encoding favourites: %v", err)
 	}
