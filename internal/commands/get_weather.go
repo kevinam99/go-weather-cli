@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
@@ -96,7 +98,15 @@ func getFavouriteCoordinates(city string) (*Coordinates, error) {
 }
 
 func fetchWeather(lat, lon float64) (WeatherInfo, error) {
-	apiKey := "7dd9e0f7496e2aef381cf31d157c4377" // Replace with your actual API key
+	if err := godotenv.Load(); err != nil {
+		return WeatherInfo{}, fmt.Errorf("error loading .env file: %v", err)
+	}
+
+	apiKey := os.Getenv("OPENWEATHER_API_KEY")
+	if apiKey == "" {
+		return WeatherInfo{}, fmt.Errorf("OPENWEATHER_API_KEY not found in environment")
+	}
+
 	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%.6f&lon=%.6f&appid=%s&units=metric", lat, lon, apiKey)
 
 	resp, err := http.Get(url)
