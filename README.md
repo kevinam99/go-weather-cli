@@ -13,7 +13,7 @@ I've also added a few other features:
 
 
 ## Usage
-
+Make sure you have a .env file with the API key (`OPENWEATHERMAP_API_KEY`).
 To fetch the weather for the given coordinates, run in the format `get-weather -l <latitude> -n <longitude>`:
 ```bash
 go run cmd/go-weather-cli/main.go get-weather -l 15.4027 -n 74.0078 
