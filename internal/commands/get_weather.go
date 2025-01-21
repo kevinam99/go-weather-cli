@@ -53,7 +53,7 @@ func getWeather() *cobra.Command {
 			}
 
 			// Display weather information
-			fmt.Printf("Weather for location %s, %s (%.4f, %.4f):\n", weather.City, weather.Country, lat, lon)
+			fmt.Printf("Weather for location %s, %s (%.4f° N, %.4f° E):\n", weather.City, weather.Country, lat, lon)
 			fmt.Printf("Temperature: %.1f°C\n", weather.Temperature)
 			fmt.Printf("Conditions: %s\n", weather.Conditions)
 			fmt.Printf("Humidity: %d%%\n", weather.Humidity)

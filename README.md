@@ -38,3 +38,25 @@ go run cmd/go-weather-cli/main.go get-favourites
 
 I hope you find this useful. Feel free to contribute to the project.
 
+## Convenience commands
+
+I've added a Makefile to make it easier to run the commands.
+
+To get the weather for the given coordinates, run `make weather-coords LAT=15.4027 LON=74.0078`.
+
+To add a city to favourites, run `make set-fav CITY=Oslo LAT=59.9139 LON=10.7522`.
+
+To get the weather for a favourite city, run `make weather-city CITY=Oslo`.
+
+To get the list of favourite cities, run `make favourites`.
+
+
+## Contributing
+
+I'm not sure if this is the best way to do it. I'm open to suggestions.
+
+Feel free to contribute to the project. 🎉🚀
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
